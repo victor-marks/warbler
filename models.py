@@ -191,14 +191,19 @@ class Favorite(db.Model):
         db.Integer,
         db.ForeignKey('users.id', ondelete='CASCADE'),
         nullable=False,
+        # primary_key=True
     )
 
     msg_id = db.Column(
         db.Integer,
         db.ForeignKey('messages.id', ondelete='CASCADE'),
         nullable=False,
+        # primary_key=True
     )
 
+    # FIXME: learn how to have a "multi-column unique constraint"
+
+    # FIXME: "message"
     messages = db.relationship('Message', backref='favorites')
 
 

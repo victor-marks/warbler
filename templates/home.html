@@ -46,11 +46,9 @@
           <div class="message-area">
             <a href="/users/{{ msg.user.id }}">@{{ msg.user.username }}</a>
             <span class="text-muted">{{ msg.timestamp.strftime('%d %B %Y') }}</span>
-
-            <!-- Work on using Jinja to change the class based on if it's in favorites :) -->
             {% if msg.id in favorites %}
             <form action="/messages/{{ msg.id }}/unfavorite" method="post">
-              <a>
+              <a> 
                 <button class="btn" style="background-color:transparent">
                   <i class="fas fa-star"></i>
                 </button>

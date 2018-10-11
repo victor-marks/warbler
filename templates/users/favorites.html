@@ -4,6 +4,9 @@
     <ul class="list-group" id="messages">
 
       {% for message in favorite_list %}
+      % for fav in favorites %
+         fav.message_id    fav.user.id  fav.user.image_url
+
 
         <li class="list-group-item">
           <a href="/messages/{{ message.messages.id }}" class="message-link">
