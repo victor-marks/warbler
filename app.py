@@ -5,7 +5,7 @@ from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy.exc import IntegrityError
 
 from forms import UserAddForm, EditAddForm, LoginForm, MessageForm
-from models import db, connect_db, User, Message
+from models import db, connect_db, User, Message, Favorite
 
 CURR_USER_KEY = "curr_user"
 
@@ -214,8 +214,6 @@ def profile():
         # FIX THIS!
         user_auth = User.authenticate(username=g.user.username, password=form.data['password'])   
 
-        # import pdb; pdb.set_trace()   
-
         if user_auth:
 
             user.username = request.form.get('username')
@@ -295,6 +293,39 @@ def messages_destroy(message_id):
     return redirect(f"/users/{g.user.id}")
 
 
+@app.route('/messages/<int:message_id>/favorite', methods=["POST"])
+def add_favorite_message(message_id):
+    """add favorite message to database."""
+
+    if not g.user:
+        flash("Please login.")
+        return redirect("/login")
+
+    user_id = g.user.id
+    favorite = Favorite(user_id=user_id,msg_id=message_id)
+    db.session.add(favorite)
+    db.session.commit()
+
+    return redirect(f"/users/{g.user.id}")
+
+
+@app.route('/messages/<int:message_id>/unfavorite', methods=["POST"])
+def remove_favorite_message(message_id):
+    """remove favorite message to database."""
+
+    if not g.user:
+        flash("Please login.")
+        return redirect("/login")
+
+    user_id = g.user.id
+    unfavorite = Favorite.query.filter(Favorite.msg_id==message_id).first()
+    import pdb; pdb.set_trace()
+    db.session.delete(unfavorite)
+    db.session.commit()
+
+    return redirect(f"/users/{g.user.id}")
+
+
 ##############################################################################
 # Homepage and error pages
 
@@ -312,11 +343,6 @@ def homepage():
         user = User.query.get(session[CURR_USER_KEY])
 
         following_ids = [f.id for f in user.following] + [g.user.id]
-# turn into string?
-
-        # print('\n\n\n\n Follower ids: ' , g.user.following)
-
-        print('\n\n\n\n Following ids: ' , following_ids)
 
         messages = (Message
                     .query
@@ -324,9 +350,10 @@ def homepage():
                     .filter(Message.user_id.in_(following_ids))
                     .limit(100))
 
-        import pdb; pdb.set_trace()
+        favorites = Favorite.query.all()
+        list_of_favorites = [fav.msg_id for fav in favorites if fav.user_id == g.user.id]
 
-        return render_template('home.html', messages=messages)
+        return render_template('home.html', messages=messages, favorites=list_of_favorites)
 
     else:
         return render_template('home-anon.html')

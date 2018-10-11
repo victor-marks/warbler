@@ -167,6 +167,36 @@ class Message(db.Model):
         nullable=False,
     )
 
+class Favorite(db.Model):
+    """Maps a users id to their favorite message (id) """
+
+    __tablename__ = 'favorites'
+
+    id = db.Column(
+        db.Integer,
+        primary_key=True,
+    )
+
+    user_id = db.Column(
+        db.Integer,
+        db.ForeignKey('users.id', ondelete='CASCADE'),
+        nullable=False,
+    )
+
+    msg_id = db.Column(
+        db.Integer,
+        db.ForeignKey('messages.id', ondelete='CASCADE'),
+        nullable=False,
+    )
+
+    # def is_favorited(self, msg_id):
+    #     """Get favorites from one user"""
+
+    #     list_of_favorites = (Favorites
+    #                 .query
+    #                 .order_by(Message.timestamp.desc())
+    #                 .filter(user_id=self.id))
+
 
 def connect_db(app):
     """Connect this database to provided Flask app.
