@@ -81,6 +81,47 @@ class UserModelTestCase(TestCase):
         self.assertEqual(u.followers.count(), 0)
         self.assertEqual(u.is_followed_by(v), False)
         self.assertEqual(u.is_following(v), False)
-        # self.assertIn('testuser', u.authenticate('testuser','HASHED_PASSWORD'))
+
+    def test_user_signup(self):
+
+        u = User.signup(username='username',
+            email='email@gmail.com',
+            password='hashed_pwd',
+            image_url='image_url',
+        )
+
+        db.session.commit()
+
+        query = User.query.all()
+
+        # Tests that user was added to DB
+
+        self.assertEqual(len(query),1)
+
+        # test that the user instance is equal to the query
+
+        queried_user = User.query.first()
+
+        self.assertEqual(u,queried_user)
+
+
+    def test_user_auth(self):
+
+        u = User.signup(username='username',
+            email='email@gmail.com',
+            password='hashed_pwd',
+            image_url='image_url',
+        )
+
+        db.session.commit()
+
+        auth_user = User.authenticate(u.username,'hashed_pwd')
+
+        self.assertEqual(auth_user,u)
+
+        # get full test coverage! :) for likes and follows... ask joel for clarification
+
+
+
 
 
