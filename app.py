@@ -144,7 +144,10 @@ def users_show(user_id):
     """Show user profile."""
 
     user = User.query.get_or_404(user_id)
-    return render_template('users/show.html', user=user)
+
+    num_of_likes = Favorite.query.group_by(Favorite.id, user_id==g.user.id).count()
+
+    return render_template('users/show.html', user=user, num_of_likes=num_of_likes)
 
 
 @app.route('/users/<int:user_id>/following')
@@ -319,11 +322,11 @@ def remove_favorite_message(message_id):
 
     user_id = g.user.id
     unfavorite = Favorite.query.filter(Favorite.msg_id==message_id).first()
-    import pdb; pdb.set_trace()
+    # import pdb; pdb.set_trace()
     db.session.delete(unfavorite)
     db.session.commit()
 
-    return redirect(f"/users/{g.user.id}")
+    return redirect("/")
 
 
 ##############################################################################
