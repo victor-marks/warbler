@@ -145,9 +145,22 @@ def users_show(user_id):
 
     user = User.query.get_or_404(user_id)
 
-    num_of_likes = Favorite.query.group_by(Favorite.id, user_id==g.user.id).count()
+    num_of_likes = user.num_of_likes()
 
     return render_template('users/show.html', user=user, num_of_likes=num_of_likes)
+
+
+@app.route('/users/<int:user_id>/favorites')
+def show_users_favorites(user_id):
+    """Show favorites from user."""
+
+    user = User.query.get_or_404(user_id)
+    favorite_list = user.favorites.all()
+
+    num_of_likes = user.num_of_likes()
+
+    return render_template('users/favorites.html', user=user, favorite_list=favorite_list, num_of_likes=num_of_likes)
+
 
 
 @app.route('/users/<int:user_id>/following')

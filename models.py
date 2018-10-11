@@ -77,6 +77,9 @@ class User(db.Model):
 
     messages = db.relationship('Message', backref='user', lazy='dynamic')
 
+    favorites = db.relationship('Favorite', backref='user', lazy='dynamic')
+
+
     followers = db.relationship(
         "User",
         secondary="follows",
@@ -139,6 +142,13 @@ class User(db.Model):
 
         return False
 
+    def num_of_likes(self):
+        """Get num of likes for specific user"""
+
+        num_of_likes = self.favorites.count()
+        
+        return num_of_likes
+
 
 class Message(db.Model):
     """An individual message ("warble")."""
@@ -189,13 +199,25 @@ class Favorite(db.Model):
         nullable=False,
     )
 
-    # def is_favorited(self, msg_id):
-    #     """Get favorites from one user"""
+    messages = db.relationship('Message', backref='favorites')
 
-    #     list_of_favorites = (Favorites
-    #                 .query
-    #                 .order_by(Message.timestamp.desc())
-    #                 .filter(user_id=self.id))
+
+# might need to change name below to do conflict from table name
+    # favorites = db.relationship(
+    # "User",
+    # secondary="follows",
+    # primaryjoin=(FollowersFollowee.follower_id == id),
+    # secondaryjoin=(FollowersFollowee.followee_id == id),
+    # backref=db.backref('following', lazy='dynamic'),lazy='dynamic'
+    # )
+
+#    followers = db.relationship(
+#         "User",
+#         secondary="follows",
+#         primaryjoin=(FollowersFollowee.follower_id == id),
+#         secondaryjoin=(FollowersFollowee.followee_id == id),
+#         backref=db.backref('following', lazy='dynamic'),lazy='dynamic'
+#         )
 
 
 def connect_db(app):
