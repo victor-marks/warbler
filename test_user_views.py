@@ -73,33 +73,12 @@ class UserModelTestCase(TestCase):
         u = User(
             email="test@test.com",
             username="testuser",
-            password=bcrypt.generate_password_hash("HASHED_PASSWORD").decode('UTF-8')
+            password=bcrypt.generate_password_hash("HASHED_PASSWORD").decode('UTF-8'),
+            image_url=form.data['image_url'] or 'None,     
         )
 
-        self.session[CURR_USER_KEY] = u.id
+    def test_login(self):
+        """Test that login function works"""
 
-        self.assertEqual(response.status_code,200)
-
-
-# test login/logout with view session  
-
-
-        # v = User(
-        #     email="vest@vest.com",
-        #     username="vestuser",
-        #     password=bcrypt.generate_password_hash("HASHED_PASSWORD").decode('UTF-8')
-        # )
-
-        # db.session.add(u)
-        # db.session.add(v)
-
-        # db.session.commit()
-
-        # # User should have no messages & no followers
-        # self.assertEqual(u.messages.count(), 0)
-        # self.assertEqual(u.followers.count(), 0)
-        # self.assertEqual(u.is_followed_by(v), False)
-        # self.assertEqual(u.is_following(v), False)
-        # # self.assertIn('testuser', u.authenticate('testuser','HASHED_PASSWORD'))
-
+        
 
