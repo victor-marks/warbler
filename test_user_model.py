@@ -88,7 +88,7 @@ class UserModelTestCase(TestCase):
             email='email@gmail.com',
             password='hashed_pwd',
             image_url='image_url',
-        )
+        )s
 
         db.session.commit()
 
@@ -104,7 +104,7 @@ class UserModelTestCase(TestCase):
 
         self.assertEqual(u,queried_user)
 
-        
+
 
 
     def test_user_auth(self):
