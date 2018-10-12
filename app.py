@@ -48,6 +48,11 @@ def do_login(user):
 
 def do_logout():
     """Logout user."""
+    print('\n\n\n\n', 'boop')
+
+    print('\n\n\n\n', session)
+
+    # import pdb; pdb.set_trace()
 
     if CURR_USER_KEY in session:
         del session[CURR_USER_KEY]

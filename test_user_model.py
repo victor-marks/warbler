@@ -104,6 +104,8 @@ class UserModelTestCase(TestCase):
 
         self.assertEqual(u,queried_user)
 
+        
+
 
     def test_user_auth(self):
 
